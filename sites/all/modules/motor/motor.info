@@ -1,0 +1,6 @@
+name = motor
+description = motor
+core = 7.x
+version = 7.x-1.x
+
+stylesheets[all][] = motor.css

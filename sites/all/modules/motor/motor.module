@@ -1,0 +1,331 @@
+<?php
+
+define('SPOT', 10);
+define('MIS', -1);
+
+function motor_menu() {
+
+  $items['game'] = array(
+    'title' => 'Game',
+    'page callback' => 'motor_game',
+    'page arguments' => array(1),
+    'access arguments' => array('authenticated user'),
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['ajax/spot'] = array(
+    'title' => 'import data',
+    'page callback' => 'motor_ajax_callable_spot',
+    'page arguments' => array(2,3,4),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['ajax/savetime'] = array(
+    'title' => 'savetime',
+    'page callback' => 'motor_ajax_callable_savetime',
+    'page arguments' => array(2, 3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['ajax/gettime'] = array(
+    'title' => 'gettime',
+    'page callback' => 'motor_ajax_callable_gettime',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['ajax/setspots'] = array(
+    'title' => 'gettime',
+    'page callback' => 'motor_ajax_callable_setspots',
+    'page arguments' => array(2,3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  
+  return $items;
+}
+
+
+
+function motor_form_images_node_form_alter(&$form, &$form_state, $form_id) {
+  $form['#attached']['js'][] = drupal_get_path('module', 'motor') . '/motor.js';
+}
+
+function motor_game($nid) {
+
+  global $user;
+
+  $nid = motor_find_actual_game($user->uid);
+  if ($nid == -1) {
+    drupal_goto('/');
+  }
+
+  /*
+  $gid = 1;
+  $query = db_select('motor_spot_diff', 'm')
+    ->fields('m', array('spotted'))
+    ->condition('uid', $user->uid)
+    ->condition('nid', $gid);
+    $result = $query->execute()->fetch();*/
+
+  drupal_add_js(drupal_get_path('module', 'motor').'/flipclock.min.js');
+  drupal_add_css(drupal_get_path('module', 'motor').'/flipclock.css');
+
+  drupal_add_js(drupal_get_path('module', 'motor').'/game.js');
+
+  $output = '';
+
+  $node = node_load($nid);
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  $image1 = $node_wrapper->field_image->value();
+  $image2 = $node_wrapper->field_image_b->value();
+
+  $image1_render = theme('image_style',array('style_name' => 'large', 'path' => $image1['uri']));
+  $image2_render = theme('image_style',array('style_name' => 'large', 'path' => $image2['uri']));
+  
+  $output .= '<div id="hint">HINT</div>';
+  $output .= '<div id="game-message"></div>';
+  $output .= '<div id="game-clock"></div>';
+  $output .= '<div id="game-result"><span id="spotted">0</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
+  $output .= '<div id="score">0</div>';
+  $output .= '<div id="game" data-gid="' . $node->nid . '">';
+  $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320" style="border:1px solid #d3d3d3;"></div>';
+  $output .= '<div id="image-2" class="spot-image">' . $image2_render . '</div>';
+  $output .= '</div>';
+  return $output;
+}
+
+function motor_ajax_callable_spot($gid, $x, $y) {
+  global $user;
+
+  $points = motor_get_game_coords($gid);
+  $score = motor_getscore($gid);
+  $coords = [];
+
+  $spot = FALSE;
+  $spot_count = count($points);
+
+  for ($c = 0; $c < $spot_count; $c+=2) {
+    if ($x >= $points[$c][0] && $x <= $points[$c + 1][0] && $y >= $points[$c][1] && $y <= $points[$c + 1][1]) {
+      $spot = TRUE;
+      $which = $c;
+    }
+  }
+
+  if ($spot) {
+    $spotted = motor_get_spots($gid, $user->uid);
+
+    if ($spotted === FALSE) {
+      $spotlist = [];
+    }
+    else {
+      $spotlist = explode(',', $spotted);
+    }
+
+    if (!in_array($which / 2, $spotlist)) {
+
+      $spotlist[] = $which / 2;
+      $finished = 0;
+      if (count($spotlist) == $spot_count / 2) {
+        $finished = 1;
+      }
+
+      motor_setscore($gid, $score + 10);
+      motor_setspots($gid, $spotlist, count($points));
+      $response = 1;
+      $coords = [$points[$which][0], $points[$which][1], $points[$which + 1][0], $points[$which + 1][1]];
+      //drupal_json_output($points[$which][0] . ':' . $points[$which][1] . ':' . $points[$which + 1][0] . ':' . $points[$which + 1][1] . ':' . count($spotlist));  
+      //dpm($points[$which][0] . ':' . $points[$which][1] . ':' . $points[$which + 1][0] . ':' . $points[$which + 1][1] );  
+    } else {
+      $response = -1;
+      //drupal_json_output('nope');
+    }
+
+
+  } else {
+    motor_setscore($gid, $score - 1);
+    //drupal_json_output('nope');
+    $response = 0;
+  }
+
+  $score = motor_getscore($gid);
+
+  drupal_json_output([$response, $score, $coords, count($spotlist)]);
+
+
+}
+
+function motor_get_game_coords($gid) {
+  $node = node_load($gid);
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  $coords = $node_wrapper->field_coordinates;
+
+  foreach ($coords as $coord) {
+    $parts = explode(':', $coord->value());
+    foreach ($parts as $part) {
+      $points[] = explode(',', $part);
+    }
+  }
+
+
+
+  return $points;
+}
+
+function motor_ajax_callable_savetime($gid, $time) {
+  global $user;
+
+  db_merge('motor_spot_diff')
+    ->key(array('uid' => $user->uid, 'nid' => $gid))
+    ->fields(array(
+        'time' => $time,
+    ))
+    ->execute();
+
+    print 1;
+}
+
+function motor_ajax_callable_gettime($gid) {
+  global $user;
+
+  $query = db_select('motor_spot_diff', 'm')
+    ->fields('m', array('time'))
+    ->condition('uid', $user->uid)
+    ->condition('nid', $gid);
+    $result = $query->execute()->fetch();
+
+    if (empty($result->time)) {
+      print 0;
+    } else {
+      print $result->time - 1;
+    }
+}
+
+function motor_getscore($gid) {
+  global $user;
+
+  $query = db_select('motor_spot_diff', 'm')
+    ->fields('m', array('score'))
+    ->condition('uid', $user->uid)
+    ->condition('nid', $gid);
+    $result = $query->execute()->fetch();
+
+    if (!empty($result->score)) {
+      return $result->score;
+    }
+
+    return 0;
+}
+
+function motor_get_spots($gid, $uid) {
+  $query = db_select('motor_spot_diff', 'm')
+    ->fields('m', array('spotted'))
+    ->condition('uid', $uid)
+    ->condition('nid', $gid);
+    $result = $query->execute()->fetch();
+
+    if (!empty($result)) {
+      return $result->spotted;
+    }
+
+    return FALSE;
+}
+
+function motor_setspots($gid, $spotted, $max) {
+  global $user;
+
+  $finished = ($max / 2 == count($spotted)) ? 1 : 0;
+
+  db_merge('motor_spot_diff')
+    ->key(array('uid' => $user->uid, 'nid' => $gid))
+    ->fields(array(
+        'spotted' => implode(',', $spotted),
+        'finished' => $finished,
+    ))
+    ->execute();
+}
+
+function motor_ajax_callable_setspots($gid, $hint = FALSE) {
+  global $user;
+
+  if ($hint) {
+    $coords = motor_get_game_coords($gid);
+    foreach ($coords as $coord) {
+      $result[] = $coord[0] . ':' . $coord[1];
+    }
+
+    print implode(',', $result);
+
+    return 1;
+  }
+
+  $spotlist = motor_get_spots($gid, $user->uid);
+  if (!empty($spotlist)) {
+    $spotted = explode(',', motor_get_spots($gid, $user->uid));
+    $coords = motor_get_game_coords($gid);
+
+    foreach ($spotted as $spot) {
+      $result[] = implode(':', $coords[$spot * 2]);
+      $result[] = implode(':', $coords[$spot * 2 + 1]);
+    }
+    $already = implode(',', $result);
+
+    print $already . ',' . count($coords);
+  } else {
+    print NULL;
+  }
+}
+
+function motor_find_actual_game($uid) {
+
+  $query = db_select('motor_spot_diff', 'm')
+    ->fields('m', array('nid'))
+    ->condition('uid', $uid)
+    ->orderBy('nid', 'DESC')
+    ->range(0,1);
+  $exist = $query->execute()->fetch();
+
+  $query = db_select('motor_spot_diff', 'm')
+    ->fields('m', array('nid'))
+    ->condition('uid', $uid)
+    ->condition('finished', 0)
+    ->orderBy('nid', 'DESC')
+    ->range(0,1);
+  $last = $query->execute()->fetch();
+
+  if (empty($last) && !empty($exist)) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->condition('type', 'images')
+      ->condition('status', 1)
+      ->condition('nid', $exist->nid, '>')
+      ->orderBy('nid', 'DESC')
+      ->range(0,1);
+    $last = $query->execute()->fetch();
+  }
+
+  if (empty($exist)) {
+    return 1;
+  } elseif(empty($last)) {
+    return -1;
+  } else {
+    return $last->nid;
+  }
+}
+
+function motor_setscore($gid, $score) {
+  global $user;
+
+  db_merge('motor_spot_diff')
+    ->key(array('uid' => $user->uid, 'nid' => $gid))
+    ->fields(array(
+        'score' => $score,
+    ))
+    ->execute();
+}
+

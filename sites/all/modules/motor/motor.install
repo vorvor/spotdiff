@@ -1,0 +1,54 @@
+<?php
+
+function motor_schema() {
+    $schema['motor_spot_diff'] = array(
+        'description' => 'The table for storing player game statuses.',
+        'fields' => array(
+            'id' => array(
+                'description' => 'ID',
+                'type' => 'serial',
+                'not null' => TRUE,
+                'unsigned' => TRUE,
+            ),
+            'spotted' => array(
+                'description' => 'spotted',
+                'type' => 'varchar',
+                'length' => 255,
+                'not null' => TRUE,
+                'default' => '',
+            ),
+            'uid' => array(
+                'description' => 'UID',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'nid' => array(
+                'description' => 'NID',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'score' => array(
+                'description' => 'score',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'time' => array(
+                'description' => 'time',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+            'finished' => array(
+                'description' => 'finished',
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+            ),
+        ),
+        'primary key' => array('id'),
+    );
+    return $schema;
+}

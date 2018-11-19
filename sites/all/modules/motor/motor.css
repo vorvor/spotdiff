@@ -1,0 +1,13 @@
+div.image-preview,
+div.image-widget-data {
+  float: none !important;
+}
+
+div.field-name-field-image,
+div.field-name-field-image-b {
+  float: left;
+}
+
+#img-1-cnvs {
+  margin-left: -480px;
+}
