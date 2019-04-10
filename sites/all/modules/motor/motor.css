@@ -1,3 +1,20 @@
+@font-face {
+    font-family: 'NexaRust';
+    src: url('fonts/NexaRustSlab-BlackShadow01.eot');
+    src: url('fonts/NexaRustSlab-BlackShadow01.eot?#iefix') format('embedded-opentype'),
+        url('fonts/NexaRustSlab-BlackShadow01.woff2') format('woff2'),
+        url('fonts/NexaRustSlab-BlackShadow01.woff') format('woff'),
+        url('fonts/NexaRustSlab-BlackShadow01.ttf') format('truetype'),
+        url('fonts/NexaRustSlab-BlackShadow01.svg#NexaRustSlab-BlackShadow01') format('svg');
+    font-weight: 900;
+    font-style: normal;
+}
+
+body {
+	background: url(retro-bg.jpg);
+	background-size: cover;
+}
+
 div.image-preview,
 div.image-widget-data {
   float: none !important;
@@ -11,3 +28,41 @@ div.field-name-field-image-b {
 #img-1-cnvs {
   margin-left: -480px;
 }
+
+#score, #game-message, #game-result {
+	font-family: NexaRust;
+	font-size: 2.5em;
+	line-height: 1em;
+}
+
+.spot-image {
+    float: left;
+	behavior:url(-ms-transform.htc);
+    /* Firefox */
+    -moz-transform:rotate(2deg);
+    /* Safari and Chrome */
+    -webkit-transform:rotate(2deg);
+    /* Opera */
+    -o-transform:rotate(2deg);
+    /* IE9 */
+    -ms-transform:rotate(2deg);
+    /* IE6,IE7 */
+    filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476);
+    /* IE8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476)"; 
+}
+
+
+#game-clock, #game-stats {
+	float: left;
+	width: 49%;
+}
+
+#game {
+	clear: both;
+}
+
+.nextgame {
+    cursor: pointer;
+}
+

@@ -18,6 +18,8 @@ Drupal.behaviors.game = {
       var c = document.getElementById("img-1-cnvs");
       var ctx = c.getContext("2d");
       ctx.strokeStyle = "yellow";
+      $this = $(this);
+      $('#dev').append(relX + ':' + relY + '<br/>');
       $.ajax({
         url: "/ajax/spot/" + gid + "/" + relX + "/" + relY, 
         success: function(result){
@@ -29,9 +31,17 @@ Drupal.behaviors.game = {
             $('#spotted').html($('#spotted').html() * 1 + 1);
             $('#score').html(result[1]);
             if (result[3] == 5) {
-              $('#game-message').append("CONGRATULATION!");
+              $('#game-message').append("CONGRATULATION! NEXT >>").click(function() {
+                location.reload();
+              }).addClass('nextgame');
               clock.stop();
+              $('.spot-image').unbind('click');
             }
+          } else {
+            console.log(result);
+            $('#score').html(result[1]);
+            $this.effect("shake", {times:2, direction: "right"}, 40);
+            $this.effect("shake", {times:2, direction: "up"}, 40);
           }
         }});
     })
@@ -52,51 +62,45 @@ Drupal.behaviors.game = {
         clock.setTime(result * 1);
       }});
 
+    // init
     var c = document.getElementById("img-1-cnvs");
     var ctx = c.getContext("2d");
     ctx.strokeStyle = "yellow";
+    $('#dev').html(gid);
     $.ajax({
-        url: "/ajax/setspots/" + gid + '/' + 0, 
-        success: function(result){
-          pairs = result.split(',');
-          for (i = 0; i < pairs.length - 1; i+=2) {
-            coords1 = pairs[i].split(':');
-            coords2 = pairs[i + 1].split(':');
-            console.log(coords1[0] + ':' + coords1[1]);
-            console.log(coords2[0] + ':' + coords2[1]);
-            ctx.rect(coords1[0], coords1[1], coords2[0] - coords1[0], coords2[1] - coords1[1]);
+      url: "/ajax/setspots/" + gid + '/' + 0, 
+      success: function(result){
+        console.log(result);
+        if (result) {
+          for (i = 0; i < result['spotted'].length; i++) {
+            coord = result['spotted'][i];
+            ctx.rect(coord['x'], coord['y'], coord['x2'] - coord['x'], coord['y2'] - coord['y']);
             ctx.stroke();
           }
-          $('#spotted').html((pairs.length - 1) / 2);
-          if (pairs[pairs.length - 1] != pairs.length - 1) {
-            clock.start();
-          }
-          
-        }});
+          updateNums(result['spotted'].length / 2, result['score']);
+        }
+      }});
     
     $('#hint').click(function() {
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "white";
       $.ajax({
         url: "/ajax/setspots/" + gid + '/' + 1, 
         success: function(result) {
           console.log(result);
-          pairs = result.split(',');
-          for (i = 0; i < pairs.length - 2; i+=2) {
-            coords1 = pairs[i].split(':');
-            coords2 = pairs[i + 1].split(':');
-            console.log(coords1[0] + ':' + coords1[1]);
-            console.log(coords2[0] + ':' + coords2[1]);
-            console.log('---');
-            ctx.rect(coords1[0], coords1[1], coords2[0] - coords1[0], coords2[1] - coords1[1]);
+          for (i = 0; i < result.length; i++) {
+            coord = result[i];
+            ctx.rect(coord['x'], coord['y'], coord['x2'] - coord['x'], coord['y2'] - coord['y']);
+            ctx.fillText(i, coord['x'] - 10, coord['y'] - 10);
             ctx.stroke();
           }
-          if (pairs[pairs.length - 1] != pairs.length - 1) {
-            clock.start();
-          }
-          
         }});
     })  
-  
 
+    function updateNums(spotnum, score) {
+      $('#spotted').html(spotnum);
+      $('#score').html(score);
+    }
 
   }
 }})(jQuery);
