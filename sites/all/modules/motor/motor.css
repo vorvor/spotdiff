@@ -37,19 +37,7 @@ div.field-name-field-image-b {
 
 .spot-image {
     float: left;
-	behavior:url(-ms-transform.htc);
-    /* Firefox */
-    -moz-transform:rotate(2deg);
-    /* Safari and Chrome */
-    -webkit-transform:rotate(2deg);
-    /* Opera */
-    -o-transform:rotate(2deg);
-    /* IE9 */
-    -ms-transform:rotate(2deg);
-    /* IE6,IE7 */
-    filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476);
-    /* IE8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476)"; 
+	margin-left: 15px;
 }
 
 

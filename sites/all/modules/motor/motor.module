@@ -9,7 +9,8 @@ function motor_menu() {
     'title' => 'Game',
     'page callback' => 'motor_game',
     'page arguments' => array(1),
-    'access arguments' => array('authenticated user'),
+    'access callback' => '_motor_user_has_role',
+    'access arguments' => array(array('authenticated user')),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -18,6 +19,14 @@ function motor_menu() {
     'title' => 'Reset game',
     'page callback' => 'motor_reset_game',
     'access arguments' => array('authenticated user'),
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['dashboard'] = array(
+    'title' => 'Dashboard',
+    'page callback' => 'motor_dasboard',
+    'access arguments' => array('administer content'),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -58,6 +67,25 @@ function motor_menu() {
   return $items;
 }
 
+function _motor_user_has_role($roles) {
+
+  if (user_is_logged_in()) {
+    global $user;
+    if (in_array('administrator', $user->roles)) {
+      return TRUE;
+    }
+    foreach ($roles as $role) {
+      if (in_array($role, $user->roles)) {
+        return TRUE;
+      }
+    }
+  }
+  else {
+    return FALSE;
+  }
+}
+
+
 
 
 function motor_form_images_node_form_alter(&$form, &$form_state, $form_id) {
@@ -70,7 +98,7 @@ function motor_game($nid) {
 
   $nid = motor_find_actual_game($user->uid);
   if ($nid == -1) {
-    drupal_goto('/');
+    drupal_goto('/finish');
   }
 
   /*
@@ -309,8 +337,6 @@ function motor_find_actual_game($uid) {
     ->range(0,1);
   $exist = $query->execute()->fetch();
 
-  dpm($exist);
-
   $query = db_select('motor_spot_diff', 'm')
     ->fields('m', array('nid'))
     ->condition('uid', $uid)
@@ -318,8 +344,6 @@ function motor_find_actual_game($uid) {
     ->orderBy('nid', 'DESC')
     ->range(0,1);
   $last = $query->execute()->fetch();
-
-  dpm($last);
 
   if (empty($last) && !empty($exist)) {
     $query = db_select('node', 'n')
@@ -330,7 +354,6 @@ function motor_find_actual_game($uid) {
       ->orderBy('nid', 'ASC')
       ->range(0,1);
     $last = $query->execute()->fetch();
-    dpm($last);
   }
 
   if (empty($exist)) {
@@ -340,6 +363,33 @@ function motor_find_actual_game($uid) {
   } else {
     return $last->nid;
   }
+}
+
+function motor_game_get_title($nid) {
+  $query = db_select('node', 'n')
+    ->fields('n', array('nid', 'title'))
+    ->condition('nid', $nid);
+  $result = $query->execute()->fetch();
+
+  if (!empty($result)) {
+    return $result->title;
+  }
+
+  return NULL;
+}
+
+function motor_is_user_finished($uid, $nid) {
+  $query = db_select('motor_spot_diff', 'm')
+    ->fields('m', array('uid', 'nid', 'finished'))
+    ->condition('uid', $uid)
+    ->condition('nid', $nid);
+  $result = $query->execute()->fetch();
+
+  if (!empty($result)) {
+    return $result->finished;
+  }
+
+  return 'X';
 }
 
 function motor_set_score($gid, $score) {
@@ -362,3 +412,30 @@ function motor_reset_game() {
   return 'Table empty.';
 }
 
+function motor_dasboard() {
+  // Get users.
+  $query = db_select('users', 'u');
+  $query
+  ->fields('u', array('name', 'uid'))
+  ->condition('u.status', '1', '=')
+  ->orderBy('u.uid', 'DESC');
+  
+  //$query->range(1, 1);
+  
+  $results = $query->execute()->fetchAll();
+
+  $fields = array('username', 'actual game', 'finished');
+  foreach ($results as $result) {
+    $gid = motor_find_actual_game($result->uid);
+    dpm($result->name . ':' . $gid);
+    $row = [];
+    $row[] = $result->name;
+    $row[] = motor_game_get_title($gid);
+    $row[] = ($gid == -1) ? 'finished' : '';
+    $rows[] = $row;
+  }
+  
+  $output = theme('table', array('header' => $fields, 'rows' => $rows));
+
+  return $output;
+}
