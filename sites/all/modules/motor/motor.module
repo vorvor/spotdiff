@@ -19,7 +19,7 @@ function motor_menu() {
     'title' => 'Reset game',
     'page callback' => 'motor_reset_game',
     'access callback' => '_motor_user_has_role',
-    'access arguments' => array('authenticated user'),
+    'access arguments' => array(array('authenticated user')),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -78,7 +78,6 @@ function motor_menu() {
 }
 
 function _motor_user_has_role($roles) {
-
   if (user_is_logged_in()) {
     global $user;
     if (in_array('administrator', $user->roles)) {
@@ -439,6 +438,7 @@ function motor_dasboard() {
   foreach ($results as $result) {
     $gid = motor_find_actual_game($result->uid);
     dpm($result->name . ':' . $gid);
+    dpm($result->name . ':' . $gid);
     $row = [];
     $row[] = $result->name;
     $row[] = motor_game_get_title($gid);
@@ -458,30 +458,35 @@ function motor_dasboard() {
 }
 
 function motor_result_list($endgame = FALSE) {
+  global $user;
+
   $query = db_query('SELECT o.uid, o.id, o.score, o.time FROM motor_spot_diff o INNER JOIN (SELECT id, max(score) mscore FROM motor_spot_diff GROUP BY uid) m ON m.id = o.id ORDER BY mscore DESC');
 
-  /*SELECT uid, nid, score FROM motor_spot_diff 
-  INNER JOIN (SELECT uid, max(score) as mscore FROM motor_spot_diff GROUP BY uid) as maxvalue ON maxvalue.uid = uid AND maxvalue.mscore = score;*/
   $results = $query->fetchAll();  
 
   $fields = array('username', 'score', 'time', 'abs');
   foreach ($results as $result) {
     $indicator = (int)(((int)$result->score / $result->time * 100) / 10);
 
-    $user = user_load($result->uid);
+    $account = user_load($result->uid);
     $row = [];
-    $row[] = $user->name;
+    $row[] = $account->name;
     $row[] = $result->score;
     $row[] = $result->time;
     $row[] = $indicator;
-    $rows[] = $row;
+    if ($result->uid == $user->uid) {
+      $rows[] = array('data' => $row, 'class' => array('player-one'));
+    } else {
+      $rows[] = array('data' => $row);  
+    }
+    
   }
   
-  if ($endgame) {
+  if (!$endgame) {
     $output = array(
       'p1' => array(
         '#type' => 'markup',
-        '#markup' => '<div>Congratulation!</div>',
+        '#markup' => '<div id="finished-message">Congratulation!</div>',
       ),
     );
   }
@@ -496,6 +501,8 @@ function motor_result_list($endgame = FALSE) {
       ),
     )),
   );
+
+  drupal_set_title('');
 
   return $output;
 }
