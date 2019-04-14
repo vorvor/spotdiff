@@ -18,8 +18,7 @@ function motor_menu() {
   $items['reset-game'] = array(
     'title' => 'Reset game',
     'page callback' => 'motor_reset_game',
-    'access callback' => '_motor_user_has_role',
-    'access arguments' => array(array('authenticated user')),
+    'access arguments' => array('administer modules'),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -27,7 +26,7 @@ function motor_menu() {
   $items['dashboard'] = array(
     'title' => 'Dashboard',
     'page callback' => 'motor_dasboard',
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer modules'),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -36,7 +35,7 @@ function motor_menu() {
     'title' => 'Result list',
     'page callback' => 'motor_result_list',
     'page arguments' => array(2),
-    'access arguments' => array('administer content'),
+    'access arguments' => array('administer modules'),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -144,7 +143,7 @@ function motor_game($nid) {
   $output .= '<div id="score">0</div>';
   $output .= '</div>';
   $output .= '<div id="game" data-gid="' . $node->nid . '">';
-  $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320" style="border:1px solid #d3d3d3;"></div>';
+  $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
   $output .= '<div id="image-2" class="spot-image">' . $image2_render . '</div>';
   $output .= '</div>';
   $output .= '<div id="dev" style="width: 100%;height: 200px;border:1px solid red;clear:both;"></dev>';

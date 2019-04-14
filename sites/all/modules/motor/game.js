@@ -28,6 +28,7 @@ Drupal.behaviors.game = {
             coords = result[2];
             ctx.rect(coords[0], coords[1], coords[2]-coords[0], coords[3]-coords[1]);
             ctx.stroke();
+            $('#image-1').append('<div class="diff-spotted" style="top:' + (coords[1] - 20) + 'px;left: ' + (coords[0] - 10) + 'px;"></div>');
             $('#spotted').html($('#spotted').html() * 1 + 1);
             $('#score').html(result[1]);
             if (result[3] == 5) {
@@ -38,7 +39,6 @@ Drupal.behaviors.game = {
               $('.spot-image').unbind('click');
             }
           } else {
-            console.log(result);
             $('#score').html(result[1]);
             $this.effect("shake", {times:2, direction: "right"}, 40);
             $this.effect("shake", {times:2, direction: "up"}, 40);
@@ -63,7 +63,7 @@ Drupal.behaviors.game = {
       }});
 
     // init
-    $('#image-1 canvas').attr('height', $('#image-1 img').attr('height'));
+    $('#image-1 canvas').attr('height', $('#image-1 img').height());
     var c = document.getElementById("img-1-cnvs");
     var ctx = c.getContext("2d");
     ctx.strokeStyle = "yellow";
@@ -71,12 +71,12 @@ Drupal.behaviors.game = {
     $.ajax({
       url: "/ajax/setspots/" + gid + '/' + 0, 
       success: function(result){
-        console.log(result);
         if (result) {
           for (i = 0; i < result['spotted'].length; i++) {
             coord = result['spotted'][i];
             ctx.rect(coord['x'], coord['y'], coord['x2'] - coord['x'], coord['y2'] - coord['y']);
             ctx.stroke();
+            $('#image-1').append('<div class="diff-spotted" style="top:' + (coord['y'] - 20) + 'px;left: ' + (coord['x'] - 10) + 'px;"></div>');
           }
           updateNums(result['spotted'].length / 2, result['score']);
         }
