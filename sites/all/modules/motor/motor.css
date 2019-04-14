@@ -54,3 +54,7 @@ div.field-name-field-image-b {
     cursor: pointer;
 }
 
+.result-list td {
+    text-align: center;
+}
+

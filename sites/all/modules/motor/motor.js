@@ -5,7 +5,7 @@ Drupal.behaviors.admin = {
 
     var coord1;
 
-    $('.field-name-field-image .image-preview').append('<canvas id="img-1-cnvs" width="480" height="' + $('img', this).height() + '" style="border:1px solid #d3d3d3;"></div>');
+    $('.field-name-field-image .image-preview').append('<canvas id="img-1-cnvs" width="' + $('.field-name-field-image .image-preview img').attr('width') + '" height="' + $('.field-name-field-image .image-preview img').attr('height') + '" style="border:1px solid #d3d3d3;"></div>');
     hint();
 
     function hint() {

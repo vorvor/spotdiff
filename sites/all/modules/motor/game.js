@@ -63,6 +63,7 @@ Drupal.behaviors.game = {
       }});
 
     // init
+    $('#image-1 canvas').attr('height', $('#image-1 img').attr('height'));
     var c = document.getElementById("img-1-cnvs");
     var ctx = c.getContext("2d");
     ctx.strokeStyle = "yellow";

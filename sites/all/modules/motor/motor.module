@@ -18,6 +18,7 @@ function motor_menu() {
   $items['reset-game'] = array(
     'title' => 'Reset game',
     'page callback' => 'motor_reset_game',
+    'access callback' => '_motor_user_has_role',
     'access arguments' => array('authenticated user'),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
@@ -26,6 +27,15 @@ function motor_menu() {
   $items['dashboard'] = array(
     'title' => 'Dashboard',
     'page callback' => 'motor_dasboard',
+    'access arguments' => array('administer content'),
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['result-list'] = array(
+    'title' => 'Result list',
+    'page callback' => 'motor_result_list',
+    'page arguments' => array(2),
     'access arguments' => array('administer content'),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
@@ -98,7 +108,7 @@ function motor_game($nid) {
 
   $nid = motor_find_actual_game($user->uid);
   if ($nid == -1) {
-    drupal_goto('/finish');
+    drupal_goto('/result-list/finish');
   }
 
   /*
@@ -122,6 +132,7 @@ function motor_game($nid) {
   $node_wrapper = entity_metadata_wrapper('node', $node);
   $image1 = $node_wrapper->field_image->value();
   $image2 = $node_wrapper->field_image_b->value();
+  dpm($image1);
 
   $image1_render = theme('image_style',array('style_name' => 'large', 'path' => $image1['uri']));
   $image2_render = theme('image_style',array('style_name' => 'large', 'path' => $image2['uri']));
@@ -435,7 +446,56 @@ function motor_dasboard() {
     $rows[] = $row;
   }
   
-  $output = theme('table', array('header' => $fields, 'rows' => $rows));
+  $output = theme('table', array(
+    'header' => $fields,
+    'rows' => $rows,
+    'attributes' => array(
+      'class' => array('dashboard'),
+    ),
+  ));
+
+  return $output;
+}
+
+function motor_result_list($endgame = FALSE) {
+  $query = db_query('SELECT o.uid, o.id, o.score, o.time FROM motor_spot_diff o INNER JOIN (SELECT id, max(score) mscore FROM motor_spot_diff GROUP BY uid) m ON m.id = o.id ORDER BY mscore DESC');
+
+  /*SELECT uid, nid, score FROM motor_spot_diff 
+  INNER JOIN (SELECT uid, max(score) as mscore FROM motor_spot_diff GROUP BY uid) as maxvalue ON maxvalue.uid = uid AND maxvalue.mscore = score;*/
+  $results = $query->fetchAll();  
+
+  $fields = array('username', 'score', 'time', 'abs');
+  foreach ($results as $result) {
+    $indicator = (int)(((int)$result->score / $result->time * 100) / 10);
+
+    $user = user_load($result->uid);
+    $row = [];
+    $row[] = $user->name;
+    $row[] = $result->score;
+    $row[] = $result->time;
+    $row[] = $indicator;
+    $rows[] = $row;
+  }
+  
+  if ($endgame) {
+    $output = array(
+      'p1' => array(
+        '#type' => 'markup',
+        '#markup' => '<div>Congratulation!</div>',
+      ),
+    );
+  }
+
+  $output['p2'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('table', array(
+      'header' => $fields,
+      'rows' => $rows,
+      'attributes' => array(
+        'class' => array('result-list'),
+      ),
+    )),
+  );
 
   return $output;
 }
