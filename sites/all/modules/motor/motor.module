@@ -135,7 +135,9 @@ function motor_game($nid) {
   $image1_render = theme('image_style',array('style_name' => 'large', 'path' => $image1['uri']));
   $image2_render = theme('image_style',array('style_name' => 'large', 'path' => $image2['uri']));
   
-  $output .= '<div id="hint">HINT</div>';
+  if ($user->uid == 1) {
+    $output .= '<div id="hint">HINT</div>';
+  }
   $output .= '<div id="game-message"></div>';
   $output .= '<div id="game-clock"></div>';
   $output .= '<div id="game-stats">';
@@ -146,7 +148,10 @@ function motor_game($nid) {
   $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
   $output .= '<div id="image-2" class="spot-image">' . $image2_render . '</div>';
   $output .= '</div>';
-  $output .= '<div id="dev" style="width: 100%;height: 200px;border:1px solid red;clear:both;"></dev>';
+  if ($user->uid == 1) {
+    $output .= '<div id="dev" style="width: 100%;height: 200px;border:1px solid red;clear:both;"></dev>';
+  }
+  
   return $output;
 }
 
