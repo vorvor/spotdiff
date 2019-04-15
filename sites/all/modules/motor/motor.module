@@ -35,7 +35,8 @@ function motor_menu() {
     'title' => 'Result list',
     'page callback' => 'motor_result_list',
     'page arguments' => array(2),
-    'access arguments' => array('administer modules'),
+    'access callback' => '_motor_user_has_role',
+    'access arguments' => array(array('authenticated user')),
     'menu_name' => 'main-menu',
     'type' => MENU_NORMAL_ITEM,
   );
