@@ -26,8 +26,9 @@ Drupal.behaviors.game = {
           console.log(result);
           if (result[0] == 1) {
             coords = result[2];
-            ctx.rect(coords[0], coords[1], coords[2]-coords[0], coords[3]-coords[1]);
-            ctx.stroke();
+            // show clickable area of spot
+            //ctx.rect(coords[0], coords[1], coords[2]-coords[0], coords[3]-coords[1]);
+            //ctx.stroke();
             $('#image-1').append('<div class="diff-spotted" style="top:' + (coords[1] - 20) + 'px;left: ' + (coords[0] - 10) + 'px;"></div>');
             $('#spotted').html($('#spotted').html() * 1 + 1);
             $('#score').html(result[1]);
@@ -74,8 +75,9 @@ Drupal.behaviors.game = {
         if (result) {
           for (i = 0; i < result['spotted'].length; i++) {
             coord = result['spotted'][i];
-            ctx.rect(coord['x'], coord['y'], coord['x2'] - coord['x'], coord['y2'] - coord['y']);
-            ctx.stroke();
+            // show clickable area of spot
+            // ctx.rect(coord['x'], coord['y'], coord['x2'] - coord['x'], coord['y2'] - coord['y']);
+            // ctx.stroke();
             $('#image-1').append('<div class="diff-spotted" style="top:' + (coord['y'] - 20) + 'px;left: ' + (coord['x'] - 10) + 'px;"></div>');
           }
           updateNums(result['spotted'].length / 2, result['score']);
