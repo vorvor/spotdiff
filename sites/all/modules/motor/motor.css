@@ -95,4 +95,8 @@ only screen
             width: 100%;
         }
 
+        #score, #game-message, #game-result, #finished-message {
+            text-align: center;
+        }
+
 }
