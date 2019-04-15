@@ -13,5 +13,34 @@
 	text-align: center;
 	text-decoration: none;
 	font-weight: bold;
-	
+}
+
+.header__secondary-menu a {
+	background:#c72025;
+	padding:4px 8px 6px;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 4px;
+}
+
+.timer {
+    zoom: 0.5;
+    -moz-transform: scale(0.5);
+}
+
+@media only screen 
+    and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: portrait),
+only screen
+    and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: landscape) {
+        body {
+
+        }
+
+        #auth_box {
+    		width: 70%;
+		}
+
+		.flip-clock-wrapper ul {
+			
+		}
 }

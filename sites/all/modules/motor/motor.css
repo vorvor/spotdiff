@@ -86,4 +86,13 @@ tr.player-one {
 }
 
 
+@media only screen 
+    and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: portrait),
+only screen
+    and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: landscape) {
+        
+        #game-clock, #game-stats {
+            width: 100%;
+        }
 
+}
