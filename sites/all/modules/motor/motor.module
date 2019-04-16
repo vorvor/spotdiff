@@ -527,3 +527,12 @@ function motor_result_list($endgame = FALSE) {
 
   return $output;
 }
+
+function motor_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+
+  if ($form_id == 'user_profile_form' && $form['#user_category'] == 'account' && $user->uid > 1) {
+    $form['account']['mail']['#attributes'] = array('readonly' => 'readonly', 'disabled' => 'disabled');
+    $form['picture']['#access'] = FALSE;
+  }
+}
