@@ -23,7 +23,6 @@ Drupal.behaviors.game = {
       $.ajax({
         url: "/ajax/spot/" + gid + "/" + relX + "/" + relY, 
         success: function(result){
-          console.log(result);
           if (result[0] == 1) {
             coords = result[2];
             // show clickable area of spot
@@ -80,7 +79,7 @@ Drupal.behaviors.game = {
             // ctx.stroke();
             $('#image-1').append('<div class="diff-spotted" style="top:' + (coord['y'] - 20) + 'px;left: ' + (coord['x'] - 10) + 'px;"></div>');
           }
-          updateNums(result['spotted'].length / 2, result['score']);
+          updateNums(result['spotted'].length, result['score']);
         }
       }});
     
@@ -90,7 +89,6 @@ Drupal.behaviors.game = {
       $.ajax({
         url: "/ajax/setspots/" + gid + '/' + 1, 
         success: function(result) {
-          console.log(result);
           for (i = 0; i < result.length; i++) {
             coord = result[i];
             ctx.rect(coord['x'], coord['y'], coord['x2'] - coord['x'], coord['y2'] - coord['y']);

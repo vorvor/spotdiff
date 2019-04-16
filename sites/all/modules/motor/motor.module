@@ -131,7 +131,6 @@ function motor_game($nid) {
   $node_wrapper = entity_metadata_wrapper('node', $node);
   $image1 = $node_wrapper->field_image->value();
   $image2 = $node_wrapper->field_image_b->value();
-  dpm($image1);
 
   $image1_render = theme('image_style',array('style_name' => 'large', 'path' => $image1['uri']));
   $image2_render = theme('image_style',array('style_name' => 'large', 'path' => $image2['uri']));
@@ -139,11 +138,24 @@ function motor_game($nid) {
   if ($user->uid == 1) {
     $output .= '<div id="hint">HINT</div>';
   }
+
+  // get initial score
+  $user_score = motor_get_user_score($user->uid);
+  if (is_null($user_score)) {
+    $user_score = 0;
+  }
+  // get initial found spot num
+  $spots = count(motor_get_spots($nid, $user->uid));
+  if (!$spots) {
+    $spots = 0;
+  }
+
+
   $output .= '<div id="game-message"></div>';
   $output .= '<div id="game-clock"></div>';
   $output .= '<div id="game-stats">';
-  $output .= '<div id="game-result"><span id="spotted">0</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
-  $output .= '<div id="score">0</div>';
+  $output .= '<div id="game-result"><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
+  $output .= '<div id="score">' . motor_get_user_score($user->uid) . '</div>';
   $output .= '</div>';
   $output .= '<div id="game" data-gid="' . $node->nid . '">';
   $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
@@ -152,7 +164,7 @@ function motor_game($nid) {
   if ($user->uid == 1) {
     $output .= '<div id="dev" style="width: 100%;height: 200px;border:1px solid red;clear:both;"></dev>';
   }
-  
+
   return $output;
 }
 
@@ -170,7 +182,10 @@ function motor_ajax_callable_spot($gid, $x, $y) {
     return 1;
   }
 
-  $score = motor_get_score($gid);
+  // double check this change
+  //$score = motor_get_score($gid);
+  $score = motor_get_user_score($user->uid);
+
   $coords = [];
 
   $spot = FALSE;
@@ -217,8 +232,6 @@ function motor_ajax_callable_spot($gid, $x, $y) {
   $score = motor_get_score($gid);
 
   drupal_json_output([$response, $score, $coords, count($spotlist)]);
-
-
 }
 
 function motor_get_game_coords($gid) {
@@ -393,20 +406,6 @@ function motor_game_get_title($nid) {
   return NULL;
 }
 
-function motor_is_user_finished($uid, $nid) {
-  $query = db_select('motor_spot_diff', 'm')
-    ->fields('m', array('uid', 'nid', 'finished'))
-    ->condition('uid', $uid)
-    ->condition('nid', $nid);
-  $result = $query->execute()->fetch();
-
-  if (!empty($result)) {
-    return $result->finished;
-  }
-
-  return 'X';
-}
-
 function motor_set_score($gid, $score) {
   global $user;
 
@@ -425,6 +424,21 @@ function motor_reset_game() {
   ->condition('uid', $user->uid)
   ->execute();
   return 'Table empty.';
+}
+
+function motor_get_user_score($uid) {
+  $query = db_select('motor_spot_diff', 'm')
+  ->condition('m.uid', $uid);
+  $alias = $query->addExpression('SUM(score)', 'sum_score');
+
+  $sumscore = $query->execute()->fetchAll();
+
+  if (!empty($sumscore)) {
+    return $sumscore[0]->sum_score;
+  }
+
+  return NULL;
+
 }
 
 function motor_dasboard() {
@@ -464,6 +478,8 @@ function motor_dasboard() {
 
 function motor_result_list($endgame = FALSE) {
   global $user;
+
+  dpm(motor_get_user_score(8));
 
   $query = db_query('SELECT o.uid, o.id, o.score, o.time FROM motor_spot_diff o INNER JOIN (SELECT id, max(score) mscore FROM motor_spot_diff GROUP BY uid) m ON m.id = o.id ORDER BY mscore DESC');
 
