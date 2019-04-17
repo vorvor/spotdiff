@@ -79,10 +79,11 @@ tr.player-one {
 }
 
 .diff-spotted {
-    width: 80px;
-    height: 71px;
+    width: 40px;
+    height: 35px;
     background: url(images/x-mark.png);
     position: absolute;
+    background-size: cover;
 }
 
 #user-profile-form fieldset#edit-timezone {

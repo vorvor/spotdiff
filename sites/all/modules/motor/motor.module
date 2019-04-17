@@ -144,10 +144,13 @@ function motor_game($nid) {
   if (is_null($user_score)) {
     $user_score = 0;
   }
+
   // get initial found spot num
-  $spots = count(motor_get_spots($nid, $user->uid));
+  $spots = motor_get_spots($nid, $user->uid);
   if (!$spots) {
     $spots = 0;
+  } else {
+    $spots = count($spots);
   }
 
 
@@ -155,7 +158,7 @@ function motor_game($nid) {
   $output .= '<div id="game-clock"></div>';
   $output .= '<div id="game-stats">';
   $output .= '<div id="game-result"><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
-  $output .= '<div id="score">' . motor_get_user_score($user->uid) . '</div>';
+  $output .= '<div id="score">' .$user_score . '</div>';
   $output .= '</div>';
   $output .= '<div id="game" data-gid="' . $node->nid . '">';
   $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
@@ -182,9 +185,7 @@ function motor_ajax_callable_spot($gid, $x, $y) {
     return 1;
   }
 
-  // double check this change
-  //$score = motor_get_score($gid);
-  $score = motor_get_user_score($user->uid);
+  $score = motor_get_score($gid);
 
   $coords = [];
 
@@ -229,7 +230,7 @@ function motor_ajax_callable_spot($gid, $x, $y) {
     $response = 0;
   }
 
-  $score = motor_get_score($gid);
+  $score = motor_get_user_score($user->uid);
 
   drupal_json_output([$response, $score, $coords, count($spotlist)]);
 }
@@ -433,7 +434,7 @@ function motor_get_user_score($uid) {
 
   $sumscore = $query->execute()->fetchAll();
 
-  if (!empty($sumscore)) {
+  if (!empty($sumscore) && $sumscore[0]->sum_score > 0) {
     return $sumscore[0]->sum_score;
   }
 
