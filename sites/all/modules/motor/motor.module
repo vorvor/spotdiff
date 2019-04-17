@@ -157,8 +157,9 @@ function motor_game($nid) {
   $output .= '<div id="game-message"></div>';
   $output .= '<div id="game-clock"></div>';
   $output .= '<div id="game-stats">';
-  $output .= '<div id="game-result"><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
-  $output .= '<div id="score">' .$user_score . '</div>';
+  $output .= '<div id="game-result"><span id="spotted-label">' . t('Found:') . ' </span><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
+  $output .= '<div id="score"><span id="score-label">' . t('Score:') . ' </span>' .$user_score . '</div>';
+  $output .= '<div id="pause">' . l('Pause', '/pause') . '</div>';
   $output .= '</div>';
   $output .= '<div id="game" data-gid="' . $node->nid . '">';
   $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';

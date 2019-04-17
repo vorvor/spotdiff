@@ -29,10 +29,17 @@ div.field-name-field-image-b {
   margin-left: -480px;
 }
 
-#score, #game-message, #game-result, #finished-message {
+#score, 
+#game-message, 
+#game-result, 
+#finished-message,
+#pause a,
+#back-from-pause {
 	font-family: NexaRust;
 	font-size: 2.5em;
 	line-height: 1em;
+    color: #000;
+    text-decoration: none;
 }
 
 #game-message, #finished-message {
@@ -41,9 +48,19 @@ div.field-name-field-image-b {
 }
 
 .spot-image {
-    float: left;
+    
 	margin-left: 15px;
     position: relative;
+}
+
+#image-1 {
+    float: left;
+    margin-left: 3%;
+}
+
+#image-2 {
+    float: right;
+    margin-right: 3%;
 }
 
 
@@ -52,7 +69,13 @@ div.field-name-field-image-b {
 	width: 49%;
 }
 
+#game-stats {
+  text-align: right;
+  margin-bottom: 30px;
+}
+
 #game {
+    margin-top: 40px;
 	clear: both;
 }
 
