@@ -11,13 +11,14 @@
       <a href="<?php print url('<front>'); ?>">
         <img src="<?php print $logo; ?>" alt="<?php print $site_name; ?>">
       </a>
-      <div id="registration-welcome-text">
+    </h1>
+  </div>
+
+  <div id="registration-welcome-text">
         <?php
           print config_pages_get('text', 'field_registration_form');
         ?>
       </div>
-    </h1>
-  </div>
 
   <div id="middle_part">
     <h2 class="title"><?php print $title; ?></h2>

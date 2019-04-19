@@ -17,10 +17,18 @@
 	text-decoration: none;
 }
 
+.main-menu ul li {
+	margin-left: 20px;
+}
+
 .main-menu ul {
 	border-top: 1px solid #000;
 	border-bottom: 1px solid #000;
 	padding: 4px 0 4px 0;
+}
+
+h1, h2 {
+  font-family: NexaRust;
 }
 
 #auth_box {

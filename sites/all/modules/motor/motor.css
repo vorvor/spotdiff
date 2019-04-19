@@ -64,9 +64,20 @@ div.field-name-field-image-b {
 }
 
 
-#game-clock, #game-stats {
+#game-clock, #game-stats, #game-hint {
 	float: left;
-	width: 49%;
+}
+
+#game-clock {
+  width: 45%;
+}
+
+#game-stats {
+  width: 30%;
+}
+
+#game-hint {
+    width: 20%;
 }
 
 #game-stats {

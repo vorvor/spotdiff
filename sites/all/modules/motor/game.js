@@ -33,6 +33,7 @@ Drupal.behaviors.game = {
             markSpot(coords[0] * mobRate, coords[1] * mobRate, coords[2] * mobRate, coords[3] * mobRate);
             $('#spotted').html($('#spotted').html() * 1 + 1);
             $('#score').html(result[1]);
+            $('#hint-word').html('');
             if (result[3] == 5) {
               $('#game-message').append("CONGRATULATION! NEXT >>").click(function() {
                 location.reload();
@@ -98,6 +99,14 @@ Drupal.behaviors.game = {
           }
         }});
     })  
+
+    $('#game-hint').click(function() {
+      $.ajax({
+        url: "/ajax/gethint/", 
+        success: function(result) {
+          $('#hint-word').html(result);
+        }});
+    })
 
     function updateNums(spotnum, score) {
       $('#spotted').html(spotnum);

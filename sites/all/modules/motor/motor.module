@@ -73,6 +73,13 @@ function motor_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['ajax/gethint'] = array(
+    'title' => 'gethint',
+    'page callback' => 'motor_ajax_callable_gethint',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['pause'] = array(
     'title' => 'Pausing game',
     'page callback' => 'motor_pause_game',
@@ -172,6 +179,7 @@ function motor_game($nid) {
   // Game meta info
   $output .= '<div id="game-message"></div>';
   $output .= '<div id="game-clock"></div>';
+  $output .= '<div id="game-hint">Get hint!<div id="hint-word"></div></div>';
   $output .= '<div id="game-stats">';
   $output .= '<div id="game-result"><span id="spotted-label">' . t('Found:') . ' </span><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
   $output .= '<div id="score"><span id="score-label">' . t('Score:') . ' </span>' .$user_score . '</div>';
@@ -645,4 +653,22 @@ function motor_theme() {
        'template' => 'motor_news',
      ),
    );
+}
+
+function motor_ajax_callable_gethint() {
+  global $user;
+  $nid = motor_find_actual_game($user->uid);
+
+  $spots = motor_get_spots($nid, $user->uid);
+
+  $node = node_load($nid);
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  $hints = $node_wrapper->field_hints->value();
+
+  foreach ($spots as $spot) {
+    unset($hints[$spot]);
+  }
+
+  drupal_json_output(reset($hints));
+
 }
