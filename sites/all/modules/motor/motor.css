@@ -75,7 +75,6 @@ div.field-name-field-image-b {
 }
 
 #game {
-    margin-top: 40px;
 	clear: both;
 }
 
@@ -113,16 +112,43 @@ tr.player-one {
     display: none;
 }
 
+.pause-col {
+    float: left;
+    margin-right: 20px;
+}
+
+.news {
+    background: #fff;
+    padding: 10px;
+}
+
+#pause-left {
+    width: 60%;
+}
+
+#pause-right {
+    width: 35%;
+}
+
+.flip-clock-label {
+    display: none;
+}
+
 @media only screen 
     and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: portrait),
 only screen
     and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: landscape) {
         
-        #game-clock, #game-stats {
-            width: 100%;
+        #game-stats {
+            width: 47%;
         }
 
-        #score, #game-message, #game-result, #finished-message {
+        #score, #game-message, #game-result, #finished-message, #pause a {
+            text-align: center;
+            font-size:2em;
+        }
+
+        #pause {
             text-align: center;
         }
 

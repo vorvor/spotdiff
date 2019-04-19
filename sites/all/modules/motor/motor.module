@@ -73,6 +73,15 @@ function motor_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['pause'] = array(
+    'title' => 'Pausing game',
+    'page callback' => 'motor_pause_game',
+    'access callback' => '_motor_user_has_role',
+    'access arguments' => array(array('authenticated user')),
+    'menu_name' => 'main-menu',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
   
   return $items;
 }
@@ -153,7 +162,15 @@ function motor_game($nid) {
     $spots = count($spots);
   }
 
+  drupal_set_title(''); 
 
+  // Game place
+  $output .= '<div id="game" data-gid="' . $node->nid . '">';
+  $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
+  $output .= '<div id="image-2" class="spot-image">' . $image2_render . '</div>';
+  $output .= '</div>';
+
+  // Game meta info
   $output .= '<div id="game-message"></div>';
   $output .= '<div id="game-clock"></div>';
   $output .= '<div id="game-stats">';
@@ -161,10 +178,9 @@ function motor_game($nid) {
   $output .= '<div id="score"><span id="score-label">' . t('Score:') . ' </span>' .$user_score . '</div>';
   $output .= '<div id="pause">' . l('Pause', '/pause') . '</div>';
   $output .= '</div>';
-  $output .= '<div id="game" data-gid="' . $node->nid . '">';
-  $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
-  $output .= '<div id="image-2" class="spot-image">' . $image2_render . '</div>';
-  $output .= '</div>';
+
+
+
   if ($user->uid == 1) {
     $output .= '<div id="dev" style="width: 100%;height: 200px;border:1px solid red;clear:both;"></dev>';
   }
@@ -537,4 +553,90 @@ function motor_form_alter(&$form, &$form_state, $form_id) {
     $form['account']['mail']['#attributes'] = array('readonly' => 'readonly', 'disabled' => 'disabled');
     $form['picture']['#access'] = FALSE;
   }
+}
+
+function motor_pause_game() {
+  $output['p1'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="pause-left" class="pause-col"><iframe width="700" height="480" src="https://www.youtube.com/embed/-Td7XwqzeUw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>',
+  );
+
+  $articles = motor_get_news();
+  dpm($articles);
+  foreach ($articles as $article) {
+    $cikkek[] = theme('motor_news', array('article' => $article));
+  }
+  $output['p2'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="pause-right" class="pause-col">' . implode('<br>', $cikkek) . '</div>',
+  );
+
+
+
+  return $output;
+}
+
+function motor_get_news($feed_url = 'https://alapjarat.hu/feed') {
+
+  $rss = motor_curl_get_contents($feed_url);
+  $rss = simplexml_load_string($rss);
+  
+  $news = array();
+  $c = 0;
+  foreach ($rss->channel->item as $item) {
+    array_push($news, $item);
+    $c++;
+  }
+
+  return $news;
+}
+
+function motor_curl_get_contents($url) {
+
+
+
+    $ch = curl_init($url);
+  
+
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+  
+
+  $data = curl_exec($ch);
+  $status=curl_getinfo($ch);
+  curl_close($ch);
+
+  if($status['http_code'] == 200) {
+        return $data;
+    }
+    elseif($status['http_code']==301 || $status['http_code']==302) {
+        if (!$follow_allowed) {
+            if (!empty($status['redirect_url'])) {
+                $redirURL=$status['redirect_url'];
+            } else {
+                preg_match('/href\=\"(.*?)\"/si',$data,$m);
+                if (!empty($m[1])) {
+                    $redirURL=$m[1];
+                }
+            }
+            if(!empty($redirURL)) {
+                return  call_user_func( __FUNCTION__, $redirURL, $post_paramtrs);
+            }
+        }
+    }
+
+    return;
+
+}
+
+function motor_theme() {
+   return array(
+     'motor_news' => array(
+       'variables' => array('news' => NULL),
+       'template' => 'motor_news',
+     ),
+   );
 }

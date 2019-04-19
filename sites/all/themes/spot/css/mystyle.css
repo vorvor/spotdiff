@@ -63,4 +63,31 @@ only screen
 		.flip-clock-wrapper ul {
 			
 		}
+
+		.layout-3col__full {
+			padding: 0;
+		}
+
+		#image-1, #image-2 {
+			margin: 0;
+		}
+
+		#image-1, #image-2 {
+			width: 49%;
+		}
+
+		#game-clock {
+			position: relative !important;
+			padding-top: 0px;
+			margin-left: -10%;
+			margin-top: -20px;
+			height:100px;
+			width: 60%;
+			/zoom: .6;/
+			transform: scale(.54);
+			-ms-transform: scale(.54); /* IE 9 */
+			-webkit-transform: scale(.54); /* Safari and Chrome */
+			-o-transform: scale(.54); /* Opera */
+			-moz-transform: scale(.54); /* Firefox */
+}
 }
