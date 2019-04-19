@@ -78,8 +78,7 @@ function motor_menu() {
     'page callback' => 'motor_pause_game',
     'access callback' => '_motor_user_has_role',
     'access arguments' => array(array('authenticated user')),
-    'menu_name' => 'main-menu',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_CALLBACK,
   );
 
   
@@ -556,22 +555,29 @@ function motor_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function motor_pause_game() {
+
+  $output['p0'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="pause-top" class="pause-row">' . l('<< Back to game', '/game', array('attributes' => array('id' => 'back-from-pause'))) . '</div>',
+  );
+
+
   $output['p1'] = array(
     '#type' => 'markup',
     '#markup' => '<div id="pause-left" class="pause-col"><iframe width="700" height="480" src="https://www.youtube.com/embed/-Td7XwqzeUw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>',
   );
 
   $articles = motor_get_news();
-  dpm($articles);
   foreach ($articles as $article) {
     $cikkek[] = theme('motor_news', array('article' => $article));
+    break 1;
   }
   $output['p2'] = array(
     '#type' => 'markup',
     '#markup' => '<div id="pause-right" class="pause-col">' . implode('<br>', $cikkek) . '</div>',
   );
 
-
+  drupal_set_title('');
 
   return $output;
 }

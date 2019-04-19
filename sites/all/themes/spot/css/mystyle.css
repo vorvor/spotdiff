@@ -1,3 +1,28 @@
+@font-face {
+    font-family: 'NexaRust';
+    src: url('fonts/NexaRustSlab-BlackShadow01.eot');
+    src: url('fonts/NexaRustSlab-BlackShadow01.eot?#iefix') format('embedded-opentype'),
+        url('fonts/NexaRustSlab-BlackShadow01.woff2') format('woff2'),
+        url('fonts/NexaRustSlab-BlackShadow01.woff') format('woff'),
+        url('fonts/NexaRustSlab-BlackShadow01.ttf') format('truetype'),
+        url('fonts/NexaRustSlab-BlackShadow01.svg#NexaRustSlab-BlackShadow01') format('svg');
+    font-weight: 900;
+    font-style: normal;
+}
+
+.main-menu ul li a {
+	font-family: NexaRust;
+	font-size:1.2em;
+	color: #000;
+	text-decoration: none;
+}
+
+.main-menu ul {
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
+	padding: 4px 0 4px 0;
+}
+
 #auth_box {
     width: 40%;
 }
@@ -46,6 +71,43 @@
 .timer {
     zoom: 0.5;
     -moz-transform: scale(0.5);
+}
+
+#user-profile-form fieldset#edit-timezone {
+    display: none;
+}
+
+.pause-col {
+    float: left;
+    margin-right: 20px;
+}
+
+.news {
+    background: #fff;
+    padding: 10px;
+    height: 480px;
+}
+
+.news .news-image img {
+  width: 100%;
+}
+
+.news h2,
+.news p {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#pause-left {
+    width: 60%;
+}
+
+#pause-right {
+    width: 35%;
+}
+
+.flip-clock-label {
+    display: none;
 }
 
 @media only screen 

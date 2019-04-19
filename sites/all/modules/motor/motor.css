@@ -108,31 +108,7 @@ tr.player-one {
     background-size: cover;
 }
 
-#user-profile-form fieldset#edit-timezone {
-    display: none;
-}
 
-.pause-col {
-    float: left;
-    margin-right: 20px;
-}
-
-.news {
-    background: #fff;
-    padding: 10px;
-}
-
-#pause-left {
-    width: 60%;
-}
-
-#pause-right {
-    width: 35%;
-}
-
-.flip-clock-label {
-    display: none;
-}
 
 @media only screen 
     and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: portrait),
