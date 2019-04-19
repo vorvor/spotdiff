@@ -144,12 +144,8 @@ only screen
 /* Portrait */
 @media screen and (orientation:portrait) {
    body {
-    background: red;
+    background-color: red !important;
+    background-image: none;
    }
 }
-/* Landscape */
-@media screen and (orientation:landscape) {
-   body {
-    background: green;
-   }
-}
+
