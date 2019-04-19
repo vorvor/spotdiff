@@ -140,3 +140,16 @@ only screen
         }
 
 }
+
+/* Portrait */
+@media screen and (orientation:portrait) {
+   body {
+    background: red;
+   }
+}
+/* Landscape */
+@media screen and (orientation:landscape) {
+   body {
+    background: green;
+   }
+}
