@@ -117,8 +117,21 @@ function motor_form_images_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function motor_game($nid) {
-
   global $user;
+
+  drupal_session_start();
+  if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+  }
+
+  $element = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'name' => 'key',
+      'content' => $_SESSION['csrf_token'],
+    ),
+  );
+  drupal_add_html_head($element, 'alapjarat_media');
 
   $nid = motor_find_actual_game($user->uid);
   if ($nid == -1) {
@@ -179,7 +192,7 @@ function motor_game($nid) {
   // Game meta info
   $output .= '<div id="game-message"></div>';
   $output .= '<div id="game-clock"></div>';
-  $output .= '<div id="game-hint">Get hint!<div id="hint-word"></div></div>';
+  $output .= '<div id="game-hint">Get hint!<div id="game-hint-word"></div></div>';
   $output .= '<div id="game-stats">';
   $output .= '<div id="game-result"><span id="spotted-label">' . t('Found:') . ' </span><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
   $output .= '<div id="score"><span id="score-label">' . t('Score:') . ' </span>' .$user_score . '</div>';

@@ -98,14 +98,18 @@ Drupal.behaviors.game = {
             markSpot(coord['x'] * mobRate, coord['y'] * mobRate, coord['x2'] * mobRate, coord['y2'] * mobRate);
           }
         }});
-    })  
+    })
 
     $('#game-hint').click(function() {
-      $.ajax({
+      if ($('#game-hint-sure').length) {
+        $.ajax({
         url: "/ajax/gethint/", 
         success: function(result) {
-          $('#hint-word').html(result);
+          $('#game-hint-word').html(result);
         }});
+      } else {
+        $('#game-hint-word').html('<div id="game-hint-sure">Sure? It\'s 20 points.</div>');
+      }
     })
 
     function updateNums(spotnum, score) {

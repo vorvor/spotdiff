@@ -34,12 +34,21 @@ div.field-name-field-image-b {
 #game-result, 
 #finished-message,
 #pause a,
-#back-from-pause {
+#back-from-pause,
+#game-hint {
 	font-family: NexaRust;
 	font-size: 2.5em;
 	line-height: 1em;
     color: #000;
     text-decoration: none;
+}
+
+#game-hint {
+    text-align: center;
+}
+
+#game-hint-word {
+    color: #c72025;
 }
 
 #game-message, #finished-message {
@@ -69,7 +78,7 @@ div.field-name-field-image-b {
 }
 
 #game-clock {
-  width: 45%;
+  width: 38%;
 }
 
 #game-stats {
