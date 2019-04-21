@@ -119,6 +119,7 @@ function motor_form_images_node_form_alter(&$form, &$form_state, $form_id) {
 function motor_game($nid) {
   global $user;
 
+  return 'Developement! soon back!';
   drupal_session_start();
   if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
