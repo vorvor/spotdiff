@@ -69,8 +69,8 @@ Drupal.behaviors.game = {
     gameWidth = $('#image-1 img').width();
     gameHeight = $('#image-1 img').height();
     if (gameWidth == 0) {
-      gameWidth = $('#image-1 img').width();
-      gameHeight = $('#image-1 img').height();
+      gameWidth = $('#image-1').width();
+      gameHeight = $('#image-1').height();
     }
     $('#image-1 canvas').attr('height', gameHeight);
     $('#image-1 canvas').attr('width', gameWidth);
