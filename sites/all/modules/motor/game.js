@@ -73,7 +73,7 @@ Drupal.behaviors.game = {
       gameHeight = $('#image-1').height();
     }
     $('#image-1 canvas').attr('height', gameHeight);
-    $('#image-1 canvas').attr('width', gameWidth);
+    $('#image-1 canvas').attr('width', gameWidth).css('margin-left', (gameWidth * -1) + 'px');
     var c = document.getElementById("img-1-cnvs");
     var ctx = c.getContext("2d");
     ctx.strokeStyle = "yellow";
