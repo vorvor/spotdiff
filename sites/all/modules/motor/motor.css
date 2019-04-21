@@ -161,10 +161,10 @@ only screen
 
 @media screen and (orientation:portrait) {
     #turn-mobile {
-        display: block;
+        d isplay: block;
     }
     #game-wrapper {
-     display: none;
+     d isplay: none;
    }
 
 }
