@@ -26,7 +26,8 @@ div.field-name-field-image-b {
 }
 
 #img-1-cnvs {
-  margin-left: -480px;
+  border: 1px solid red;
+  display: block;
 }
 
 #score, 
@@ -170,8 +171,12 @@ only screen
     }
 
     #image-1, #image-2 {
-            width: 100%;
-        }
+        width: 100%;
+    }
+
+    #land {
+      display: none;
+    }
 
 }
 

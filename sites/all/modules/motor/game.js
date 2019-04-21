@@ -4,6 +4,7 @@ Drupal.behaviors.game = {
   attach: function (context, settings) {
 
     var mobRate = $('#image-1 img').width() / 480;
+    console.log('MOBRATE' + mobRate);
 
     clock = $('#game-clock').FlipClock({
       clockFace: 'MinuteCounter'
@@ -68,16 +69,23 @@ Drupal.behaviors.game = {
     // init
 
 
-    $('#image-1 img').load(function() {
-          console.log('IMG HEIGHT: ' + $('#image-1 img').height());
-    console.log('DIV HEIGHT: ' + $('#image-1').height());
-    console.log('CSS HEIGHT: ' + $('#image-1 img').css('height'));
-    console.log('OUTER HEIGHT: ' + $('#image-1 img').outerHeight());
     
-      gameWidth = $(this).width();
-      gameHeight = $(this).height();
-      $('#image-1 canvas').attr('height', gameHeight);
-      $('#image-1 canvas').attr('width', gameWidth).css('margin-left', (gameWidth * -1) + 'px');
+   
+    $(window).resize(function() {
+      setCanvas();
+      var mobRate = $('#image-1 img').width() / 480;
+      $('#image-1 .diff-spotted').remove();
+      $.ajax({
+      url: "/ajax/setspots/" + gid + '/' + 0, 
+      success: function(result){
+        if (result) {
+          for (i = 0; i < result['spotted'].length; i++) {
+            coord = result['spotted'][i];
+            markSpot(coord['x'] * mobRate, coord['y'] * mobRate, coord['x2'] * mobRate, coord['y2'] * mobRate);
+          }
+          updateNums(result['spotted'].length, result['score']);
+        }
+      }});
     });
     
     var c = document.getElementById("img-1-cnvs");
@@ -135,6 +143,18 @@ Drupal.behaviors.game = {
       w = parseInt(x2) - parseInt(x);
       h = parseInt(y2) - parseInt(y);
       $('#image-1').append('<div class="diff-spotted" style="top:' + (y+h/2-18) + 'px;left: ' + (x+w/2-20) + 'px;"></div>');
+    }
+
+    function setCanvas() {
+      console.log('RESIZED!');
+      imgW = $('#image-1 img').width();
+      oW = $('#image-1').data('orig-width');
+      oH = $('#image-1').data('orig-height');
+      oP = oW / oH;
+      imgH = imgW / oP;
+      console.log(oW +':'+oH+':'+oP+':'+imgW+':'+imgH);
+
+      $('#img-1-cnvs').width(imgW).height(imgH).css('margin-top', imgH * -1 + 'px');
     }
 
   }
