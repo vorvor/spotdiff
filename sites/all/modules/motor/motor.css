@@ -73,6 +73,11 @@ div.field-name-field-image-b {
     margin-right: 3%;
 }
 
+#image-1 img,
+#image-2 img {
+    display: block;
+}
+
 
 #game-clock, #game-stats, #game-hint {
 	float: left;
