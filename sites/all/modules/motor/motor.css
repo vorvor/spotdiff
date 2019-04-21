@@ -145,7 +145,7 @@ only screen
     and (min-device-width: 320px) and (max-device-width: 736px) and (orientation: landscape) {
         
         #game-stats {
-            width: 47%;
+            width: 45%;
         }
 
         #score, #game-message, #game-result, #finished-message, #pause a {
@@ -176,7 +176,7 @@ only screen
     }
 
     #image-1, #image-2 {
-        width: 49%;
+        width: 45%;
     }
    
 }
