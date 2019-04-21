@@ -72,8 +72,8 @@ Drupal.behaviors.game = {
     console.log('OUTER HEIGHT: ' + $('#image-1 img').outerHeight());
 
     $('#image-1 img').load(function() {
-      gameWidth = $('#image-1 img').width() * mobRate;
-      gameHeight = $('#image-1 img').height() * mobRate;
+      gameWidth = $(this).width();
+      gameHeight = $(this).height();
       $('#image-1 canvas').attr('height', gameHeight);
       $('#image-1 canvas').attr('width', gameWidth).css('margin-left', (gameWidth * -1) + 'px');
     });
