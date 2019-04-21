@@ -66,14 +66,13 @@ Drupal.behaviors.game = {
       }});
 
     // init
-    gameWidth = $('#image-1 img').width();
-    gameHeight = $('#image-1 img').height();
-    if (gameWidth == 0) {
-      gameWidth = $('#image-1').width();
-      gameHeight = $('#image-1').height();
-    }
-    $('#image-1 canvas').attr('height', gameHeight);
-    $('#image-1 canvas').attr('width', gameWidth).css('margin-left', (gameWidth * -1) + 'px');
+    $('#image-1 img').load(function() {
+      gameWidth = $('#image-1 img').width() * mobRate;
+      gameHeight = $('#image-1 img').height() * mobRate;
+      $('#image-1 canvas').attr('height', gameHeight);
+      $('#image-1 canvas').attr('width', gameWidth).css('margin-left', (gameWidth * -1) + 'px');
+    });
+    
     var c = document.getElementById("img-1-cnvs");
     var ctx = c.getContext("2d");
     ctx.strokeStyle = "yellow";
