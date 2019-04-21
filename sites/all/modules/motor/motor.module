@@ -18,9 +18,10 @@ function motor_menu() {
   $items['reset-game'] = array(
     'title' => 'Reset game',
     'page callback' => 'motor_reset_game',
+    'page arguments' => array(1),
     'access arguments' => array('administer modules'),
     'menu_name' => 'main-menu',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_CALLBACK,
   );
 
   $items['dashboard'] = array(
@@ -447,8 +448,8 @@ function motor_set_score($gid, $score) {
     ->execute();
 }
 
-function motor_reset_game() {
-  global $user;
+function motor_reset_game($uid) {
+  $user = user_load($uid);
 
   db_delete('motor_spot_diff')
   ->condition('uid', $user->uid)
@@ -483,7 +484,7 @@ function motor_dasboard() {
   
   $results = $query->execute()->fetchAll();
 
-  $fields = array('username', 'actual game', 'finished');
+  $fields = array('username', 'actual game', 'finished', 'reset');
   foreach ($results as $result) {
     $gid = motor_find_actual_game($result->uid);
     dpm($result->name . ':' . $gid);
@@ -492,6 +493,7 @@ function motor_dasboard() {
     $row[] = $result->name;
     $row[] = motor_game_get_title($gid);
     $row[] = ($gid == -1) ? 'finished' : '';
+    $row[] = l('reset', 'reset-game/' . $result->uid);
     $rows[] = $row;
   }
   
