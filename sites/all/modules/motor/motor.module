@@ -119,15 +119,6 @@ function motor_form_images_node_form_alter(&$form, &$form_state, $form_id) {
 function motor_game($nid) {
   global $user;
 
-  $element = array(
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'name' => 'key',
-      'content' => $_SESSION['csrf_token'],
-    ),
-  );
-  drupal_add_html_head($element, 'alapjarat_media');
-
   $nid = motor_find_actual_game($user->uid);
   if ($nid == -1) {
     drupal_goto('/result-list/finish');
