@@ -66,6 +66,10 @@ Drupal.behaviors.game = {
       }});
 
     // init
+    console.log('IMG HEIGHT: ' + $('#image-1 img').height());
+    console.log('DIV HEIGHT: ' + $('#image-1').height());
+    console.log('CSS HEIGHT: ' + $('#image-1 img').css('height'));
+
     $('#image-1 img').load(function() {
       gameWidth = $('#image-1 img').width() * mobRate;
       gameHeight = $('#image-1 img').height() * mobRate;
