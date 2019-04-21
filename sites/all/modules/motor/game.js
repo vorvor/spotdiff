@@ -68,6 +68,8 @@ Drupal.behaviors.game = {
     // init
     $('#image-1 canvas').attr('height', $('#image-1 img').height());
     $('#image-1 canvas').attr('width', $('#image-1 img').width());
+    console.log('IMG' + $('#image-1 img').width());
+    console.log('DIV' + $('#image-1').width());
     var c = document.getElementById("img-1-cnvs");
     var ctx = c.getContext("2d");
     ctx.strokeStyle = "yellow";
