@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'NexaRust';
-    src: url('fonts/NexaRustSlab-BlackShadow01.eot');
-    src: url('fonts/NexaRustSlab-BlackShadow01.eot?#iefix') format('embedded-opentype'),
-        url('fonts/NexaRustSlab-BlackShadow01.woff2') format('woff2'),
-        url('fonts/NexaRustSlab-BlackShadow01.woff') format('woff'),
-        url('fonts/NexaRustSlab-BlackShadow01.ttf') format('truetype'),
-        url('fonts/NexaRustSlab-BlackShadow01.svg#NexaRustSlab-BlackShadow01') format('svg');
+    src: url('../fonts/NexaRustSlab-BlackShadow01.eot');
+    src: url('../fonts/NexaRustSlab-BlackShadow01.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/NexaRustSlab-BlackShadow01.woff2') format('woff2'),
+        url('../fonts/NexaRustSlab-BlackShadow01.woff') format('woff'),
+        url('../fonts/NexaRustSlab-BlackShadow01.ttf') format('truetype'),
+        url('../fonts/NexaRustSlab-BlackShadow01.svg#NexaRustSlab-BlackShadow01') format('svg');
     font-weight: 900;
     font-style: normal;
 }

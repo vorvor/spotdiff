@@ -184,6 +184,8 @@ function motor_game($nid) {
   drupal_set_title(''); 
 
   // Game place
+  $output .= '<div id="turn-mobile">Turn your mobile landscape!</div>';
+  $output .= '<div id="game-wrapper">';
   $output .= '<div id="game" data-gid="' . $node->nid . '">';
   $output .= '<div id="image-1" class="spot-image">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
   $output .= '<div id="image-2" class="spot-image">' . $image2_render . '</div>';
@@ -198,6 +200,8 @@ function motor_game($nid) {
   $output .= '<div id="score"><span id="score-label">' . t('Score:') . ' </span>' .$user_score . '</div>';
   $output .= '<div id="pause">' . l('Pause', '/pause') . '</div>';
   $output .= '</div>';
+  $output .= '</div>';
+
 
 
 

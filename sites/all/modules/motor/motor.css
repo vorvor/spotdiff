@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'NexaRust';
-    src: url('fonts/NexaRustSlab-BlackShadow01.eot');
-    src: url('fonts/NexaRustSlab-BlackShadow01.eot?#iefix') format('embedded-opentype'),
-        url('fonts/NexaRustSlab-BlackShadow01.woff2') format('woff2'),
-        url('fonts/NexaRustSlab-BlackShadow01.woff') format('woff'),
-        url('fonts/NexaRustSlab-BlackShadow01.ttf') format('truetype'),
-        url('fonts/NexaRustSlab-BlackShadow01.svg#NexaRustSlab-BlackShadow01') format('svg');
+    src: url('./fonts/NexaRustSlab-BlackShadow01.eot');
+    src: url('./fonts/NexaRustSlab-BlackShadow01.eot?#iefix') format('embedded-opentype'),
+        url('./fonts/NexaRustSlab-BlackShadow01.woff2') format('woff2'),
+        url('./fonts/NexaRustSlab-BlackShadow01.woff') format('woff'),
+        url('./fonts/NexaRustSlab-BlackShadow01.ttf') format('truetype'),
+        url('./fonts/NexaRustSlab-BlackShadow01.svg#NexaRustSlab-BlackShadow01') format('svg');
     font-weight: 900;
     font-style: normal;
 }
@@ -35,7 +35,8 @@ div.field-name-field-image-b {
 #finished-message,
 #pause a,
 #back-from-pause,
-#game-hint {
+#game-hint,
+#turn-mobile {
 	font-family: NexaRust;
 	font-size: 2.5em;
 	line-height: 1em;
@@ -128,6 +129,14 @@ tr.player-one {
     background-size: cover;
 }
 
+#turn-mobile {
+    background: url(images/turn.png) no-repeat 50% 0;
+    width: 100%;
+    height: 200px;
+    text-align: center;
+    padding-top:150px;
+    display: none;
+}
 
 
 @media only screen 
@@ -150,11 +159,19 @@ only screen
 
 }
 
-/* Portrait */
 @media screen and (orientation:portrait) {
-   body {
-    background-color: red !important;
-    background-image: none;
+    #turn-mobile {
+        display: block;
+    }
+    #game-wrapper {
+     display: none;
    }
+
 }
 
+@media screen and (orientation:landscape) {
+    #turn-mobile {
+        display: none;
+    }
+   
+}
