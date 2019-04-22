@@ -173,7 +173,8 @@ function motor_game($nid) {
   // Game place
   //$output .= '<div id="turn-mobile">Turn your mobile landscape!</div>';
   $output .= '<div id="game-wrapper">';
-  $output .= '<div id="land"></div>';
+  $output .= '<div id="game-message"></div>';
+  $output .= '<div id="land">Hello ' . $user->name . '!</div>';
   $output .= '<div id="game-spots"></div>';
   $output .= '<div id="game" data-gid="' . $node->nid . '">';
   $output .= '<div id="image-1" class="spot-image" data-orig-width="' . $image1['width'] . '" data-orig-height="' . $image1['height'] . '">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
@@ -181,7 +182,6 @@ function motor_game($nid) {
   $output .= '</div>';
 
   // Game meta info
-  $output .= '<div id="game-message"></div>';
   $output .= '<div id="game-clock"></div>';
   $output .= '<div id="game-hint">Get hint!<div id="game-hint-word"></div></div>';
   $output .= '<div id="game-stats">';

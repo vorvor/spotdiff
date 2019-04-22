@@ -5,10 +5,6 @@ Drupal.behaviors.game = {
     $('#image-1 img').load(function() {
      setCanvas(); 
      var mobRate = $('#image-1 img').width() / 480;
-     alert('MOBRATE' + mobRate);
-   
-    
-
 
     clock = $('#game-clock').FlipClock({
       clockFace: 'MinuteCounter'
@@ -161,7 +157,7 @@ Drupal.behaviors.game = {
       .height(imgH)
       .attr('height', imgH)
       .css('margin-top', imgH * -1 + 'px');
-      alert('RESIZED!' + imgW);
+
     }
 
   }) // load
