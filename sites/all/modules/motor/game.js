@@ -3,11 +3,11 @@
 Drupal.behaviors.game = {
   attach: function (context, settings) {
 
-    $('#image-1 img').load(function() {
+    //$('#image-1 img').load(function() {
      setCanvas(); 
-     var mobRate = $('#image-1 img').width() / 480;
+     var mobRate = $('#image-1 img', context).width() / 480;
      console.log('MOBRATE' + mobRate);
-   })
+   //})
     
 
 
@@ -15,7 +15,7 @@ Drupal.behaviors.game = {
       clockFace: 'MinuteCounter'
     });
 
-    $('.spot-image').click(function(e) {
+    $('.spot-image', context).click(function(e) {
       clock.start();
       console.log('CLICK');
 
