@@ -70,7 +70,7 @@ Drupal.behaviors.game = {
 
 
     
-   
+   setCanvas();
     $(window).resize(function() {
       setCanvas();
       var mobRate = $('#image-1 img').width() / 480;
