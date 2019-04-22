@@ -3,8 +3,12 @@
 Drupal.behaviors.game = {
   attach: function (context, settings) {
 
-    var mobRate = $('#image-1 img').width() / 480;
-    console.log('MOBRATE' + mobRate);
+    $('#image-1 img').load(function() {
+     setCanvas(); 
+     var mobRate = $('#image-1 img').width() / 480;
+   })
+    
+
 
     clock = $('#game-clock').FlipClock({
       clockFace: 'MinuteCounter'
@@ -12,6 +16,7 @@ Drupal.behaviors.game = {
 
     $('.spot-image').click(function(e) {
       clock.start();
+      console.log('CLICK');
 
       var parentOffset = $(this).offset(); 
       var relX = e.pageX - parentOffset.left;
@@ -67,13 +72,6 @@ Drupal.behaviors.game = {
       }});
 
     // init
-
-
-    
-   $('#image-1 img').load(function() {
-     setCanvas(); 
-   })
-   
     $(window).resize(function() {
       setCanvas();
       var mobRate = $('#image-1 img').width() / 480;
