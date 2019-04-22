@@ -6,6 +6,7 @@ Drupal.behaviors.game = {
     $('#image-1 img').load(function() {
      setCanvas(); 
      var mobRate = $('#image-1 img').width() / 480;
+     console.log('MOBRATE' + mobRate);
    })
     
 
