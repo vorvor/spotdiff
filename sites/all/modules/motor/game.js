@@ -39,7 +39,7 @@ Drupal.behaviors.game = {
             markSpot(coords[0] * mobRate, coords[1] * mobRate, coords[2] * mobRate, coords[3] * mobRate);
             $('#spotted').html($('#spotted').html() * 1 + 1);
             $('#score').html(result[1]);
-            $('#hint-word').html('');
+            $('#game-hint-word').html('');
             if (result[3] == 5) {
               $('#game-message').append("CONGRATULATION! NEXT >>").click(function() {
                 location.reload();
@@ -155,7 +155,12 @@ Drupal.behaviors.game = {
       imgH = imgW / oP;
       console.log(oW +':'+oH+':'+oP+':'+imgW+':'+imgH);
 
-      $('#img-1-cnvs').width(imgW).height(imgH).css('margin-top', imgH * -1 + 'px');
+      $('#img-1-cnvs')
+      .width(imgW)
+      .attr('width', imgW)
+      .height(imgH)
+      .attr('height', imgH)
+      .css('margin-top', imgH * -1 + 'px');
     }
 
   }) // load
