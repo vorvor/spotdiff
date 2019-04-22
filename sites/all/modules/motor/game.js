@@ -5,7 +5,7 @@ Drupal.behaviors.game = {
     $('#image-1 img').load(function() {
      setCanvas(); 
      var mobRate = $('#image-1 img').width() / 480;
-     console.log('MOBRATE' + mobRate);
+     alert('MOBRATE' + mobRate);
    
     
 
@@ -147,7 +147,7 @@ Drupal.behaviors.game = {
     }
 
     function setCanvas() {
-      console.log('RESIZED!');
+      
       imgW = $('#image-1 img').width();
       oW = $('#image-1').data('orig-width');
       oH = $('#image-1').data('orig-height');
@@ -161,6 +161,7 @@ Drupal.behaviors.game = {
       .height(imgH)
       .attr('height', imgH)
       .css('margin-top', imgH * -1 + 'px');
+      alert('RESIZED!' + imgW);
     }
 
   }) // load
