@@ -81,6 +81,13 @@ function motor_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['ajax/hintscorereduce'] = array(
+    'title' => 'gethint',
+    'page callback' => 'motor_ajax_callable_hintscorereduce',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   $items['pause'] = array(
     'title' => 'Pausing game',
     'page callback' => 'motor_pause_game',
@@ -170,29 +177,15 @@ function motor_game($nid) {
 
   drupal_set_title(''); 
 
-  // Game place
-  //$output .= '<div id="turn-mobile">Turn your mobile landscape!</div>';
-  $output .= '<div id="game-wrapper">';
-  $output .= '<div id="game-message"></div>';
-  $output .= '<div id="land">Hello ' . $user->name . '!</div>';
-  $output .= '<div id="game-spots"></div>';
-  $output .= '<div id="game" data-gid="' . $node->nid . '">';
-  $output .= '<div id="image-1" class="spot-image" data-orig-width="' . $image1['width'] . '" data-orig-height="' . $image1['height'] . '">' . $image1_render . '<canvas id="img-1-cnvs" width="480" height="320"></div>';
-  $output .= '<div id="image-2" class="spot-image">' . $image2_render . '</div>';
-  $output .= '</div>';
-
-  // Game meta info
-  $output .= '<div id="game-clock"></div>';
-  $output .= '<div id="game-hint">Get hint!<div id="game-hint-word"></div></div>';
-  $output .= '<div id="game-stats">';
-  $output .= '<div id="game-result"><span id="spotted-label">' . t('Found:') . ' </span><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
-  $output .= '<div id="score-wrapper"><span id="score-label">' . t('Score:') . ' </span><span id="score">' . $user_score . '</span></div>';
-  $output .= '<div id="pause">' . l('Pause', '/pause') . '</div>';
-  $output .= '</div>';
-  $output .= '</div>';
-
-
-
+  $output = file_get_contents(drupal_get_path('module', 'motor') . '/motor-game-messages.tpl.php');
+  $output = str_replace('###GID###', $node->nid, $output);
+  $output = str_replace('###IMG-ORIG-WIDTH###', $image1['width'],$output);
+  $output = str_replace('###IMG-ORIG-HEIGHT###', $image1['height'],$output);
+  $output = str_replace('###IMG1-RENDER###', $image1_render, $output);
+  $output = str_replace('###IMG2-RENDER###', $image2_render, $output);
+  $output = str_replace('###SPOTS###', $spots, $output);
+  $output = str_replace('###ALLSPOT###', count($node->field_coordinates[LANGUAGE_NONE]), $output);
+  $output = str_replace('###SCORE###', $user_score, $output);
 
   if ($user->uid == 1) {
     $output .= '<div id="dev" style="width: 100%;height: 200px;border:1px solid red;clear:both;"></dev>';
@@ -385,6 +378,18 @@ function motor_ajax_callable_setspots($gid, $hint = FALSE) {
   } else {
     drupal_json_output(NULL);
   }
+}
+
+function motor_ajax_callable_hintscorereduce() {
+  global $user;
+  $gid = motor_find_actual_game($uid);
+  $score = motor_get_score($gid);
+  $score -= 10;
+  motor_set_score($gid, $score);
+
+  $sumscore = motor_get_user_score($user->uid);
+
+  drupal_json_output($sumscore);
 }
 
 function motor_find_actual_game($uid) {

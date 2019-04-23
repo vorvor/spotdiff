@@ -36,11 +36,11 @@ div.field-name-field-image-b {
 #finished-message,
 #pause a,
 #back-from-pause,
-#game-hint,
+#game-hint-wrapper,
 #turn-mobile {
 	font-family: NexaRust;
 	font-size: 2.5em;
-	line-height: 1em;
+	line-height: 1.2em;
     color: #000;
     text-decoration: none;
 }
@@ -49,9 +49,18 @@ div.field-name-field-image-b {
     text-align: center;
 }
 
-#game-hint-word {
+#game-hint-word, #game-hint-alert, #game-hint-alert-pop {
     color: #c72025;
+    display: none;
+    font-size: 0.7em;
+    line-height: 1em;
+    text-align: center;
 }
+
+#game-hint-alert-pop-yes {
+    color:#000;
+}
+
 
 #game-message, #finished-message {
     text-align: center;
@@ -80,7 +89,7 @@ div.field-name-field-image-b {
 }
 
 
-#game-clock, #game-stats, #game-hint {
+#game-clock, #game-stats, #game-hint-wrapper {
 	float: left;
 }
 
@@ -89,10 +98,10 @@ div.field-name-field-image-b {
 }
 
 #game-stats {
-  width: 30%;
+  width: 34%;
 }
 
-#game-hint {
+#game-hint-wrapper {
     width: 20%;
 }
 

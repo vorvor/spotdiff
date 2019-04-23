@@ -12,7 +12,6 @@ Drupal.behaviors.game = {
 
     $('.spot-image').unbind('click').click(function(e) {
       clock.start();
-      console.log('CLICK');
 
       var parentOffset = $(this).offset(); 
       var relX = e.pageX - parentOffset.left;
@@ -35,13 +34,14 @@ Drupal.behaviors.game = {
             markSpot(coords[0] * mobRate, coords[1] * mobRate, coords[2] * mobRate, coords[3] * mobRate);
             $('#spotted').html($('#spotted').html() * 1 + 1);
             $('#score').html(result[1]);
-            $('#game-hint-word').html('');
+            $('#game-hint-word').hide();
             if (result[3] == 5) {
-              $('#game-message').append("CONGRATULATION! NEXT >>").click(function() {
+              $('#game-message').append("Szép munka! Következő kör >>").click(function() {
                 location.reload();
               }).addClass('nextgame');
               clock.stop();
               $('.spot-image').unbind('click');
+              $('#game-hint').unbind('click');
             }
           } else {
             $('#score').html(result[1]);
@@ -51,7 +51,7 @@ Drupal.behaviors.game = {
         }});
     })
 
-    $(window).bind('beforeunload', function(e){
+    $(window).unbind('click').bind('beforeunload', function(e){
       gid = $("#game").data("gid");
       $.ajax({
         url: "/ajax/savetime/" + gid + "/"  + clock.getTime(), 
@@ -101,7 +101,7 @@ Drupal.behaviors.game = {
         }
       }});
     
-    $('#hint').click(function() {
+    $('#hint').unbind('click').click(function() {
       ctx.font = "30px Arial";
       ctx.fillStyle = "white";
       $.ajax({
@@ -117,16 +117,29 @@ Drupal.behaviors.game = {
         }});
     })
 
-    $('#game-hint').click(function() {
-      if ($('#game-hint-sure').length) {
+    $('#game-hint').unbind('click').click(function() {
+      $('#game-hint-alert').show();
+      $('#game-hint-alert-pop').show();
+    })
+
+    $('#game-hint-alert-pop-yes').click(function() {
+      $('#game-hint-alert').hide();
+      $('#game-hint-alert-pop').hide();
         $.ajax({
         url: "/ajax/gethint/", 
         success: function(result) {
-          $('#game-hint-word').html(result);
+          $('#game-hint-word').html(result).show();
         }});
-      } else {
-        $('#game-hint-word').html('<div id="game-hint-sure">Sure? It\'s 20 points.</div>');
-      }
+        $.ajax({
+        url: "ajax/hintscorereduce", 
+        success: function(result) {
+          $('#score').html(result);
+        }});
+    })
+
+    $('#game-hint-alert-pop-no').click(function() {
+      $('#game-hint-alert').hide();
+      $('#game-hint-alert-pop').hide();
     })
 
     function updateNums(spotnum, score) {
