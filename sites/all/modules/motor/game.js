@@ -160,7 +160,11 @@ Drupal.behaviors.game = {
 
     }
 
-  }) // load
+  }).each(function(){
+      if(this.complete) {
+        $(this).trigger('load');
+      }
+    }); // load
 
   }
 }})(jQuery);
