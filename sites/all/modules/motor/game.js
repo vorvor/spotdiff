@@ -122,7 +122,7 @@ Drupal.behaviors.game = {
       $('#game-hint-alert-pop').show();
     })
 
-    $('#game-hint-alert-pop-yes').click(function() {
+    $('#game-hint-alert-pop-yes').unbind('click').click(function() {
       $('#game-hint-alert').hide();
       $('#game-hint-alert-pop').hide();
         $.ajax({
@@ -137,7 +137,7 @@ Drupal.behaviors.game = {
         }});
     })
 
-    $('#game-hint-alert-pop-no').click(function() {
+    $('#game-hint-alert-pop-no').unbind('click').click(function() {
       $('#game-hint-alert').hide();
       $('#game-hint-alert-pop').hide();
     })
