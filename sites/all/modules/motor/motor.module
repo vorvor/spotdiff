@@ -186,7 +186,7 @@ function motor_game($nid) {
   $output .= '<div id="game-hint">Get hint!<div id="game-hint-word"></div></div>';
   $output .= '<div id="game-stats">';
   $output .= '<div id="game-result"><span id="spotted-label">' . t('Found:') . ' </span><span id="spotted">' . $spots . '</span> / ' . count($node->field_coordinates[LANGUAGE_NONE]) . '</div>';
-  $output .= '<div id="score"><span id="score-label">' . t('Score:') . ' </span>' .$user_score . '</div>';
+  $output .= '<div id="score-wrapper"><span id="score-label">' . t('Score:') . ' </span><span id="score">' . $user_score . '</span></div>';
   $output .= '<div id="pause">' . l('Pause', '/pause') . '</div>';
   $output .= '</div>';
   $output .= '</div>';
@@ -371,7 +371,7 @@ function motor_ajax_callable_setspots($gid, $hint = FALSE) {
   $spotted = motor_get_spots($gid, $user->uid);
   if (!empty($spotted)) {
     $coords = motor_get_game_coords($gid);
-    $score = motor_get_score($gid);
+    $score = motor_get_user_score($user->uid);
 
     foreach ($spotted as $spot) {
       $result[] = $coords[$spot];

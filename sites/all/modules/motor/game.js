@@ -10,7 +10,7 @@ Drupal.behaviors.game = {
       clockFace: 'MinuteCounter'
     });
 
-    $('.spot-image').click(function(e) {
+    $('.spot-image').unbind('click').click(function(e) {
       clock.start();
       console.log('CLICK');
 
@@ -45,8 +45,8 @@ Drupal.behaviors.game = {
             }
           } else {
             $('#score').html(result[1]);
-            $this.effect("shake", {times:2, direction: "right"}, 40);
-            $this.effect("shake", {times:2, direction: "up"}, 40);
+            $('#score-wrapper').effect("shake", {times:2, direction: "right"}, 40);
+            //$this.effect("shake", {times:2, direction: "up"}, 40);
           }
         }});
     })
@@ -80,7 +80,7 @@ Drupal.behaviors.game = {
             coord = result['spotted'][i];
             markSpot(coord['x'] * mobRate, coord['y'] * mobRate, coord['x2'] * mobRate, coord['y2'] * mobRate);
           }
-          updateNums(result['spotted'].length, result['score']);
+          //updateNums(result['spotted'].length, result['score']);
         }
       }});
     });

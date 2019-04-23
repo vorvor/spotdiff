@@ -30,7 +30,7 @@ div.field-name-field-image-b {
   display: block;
 }
 
-#score, 
+#score-wrapper, 
 #game-message, 
 #game-result, 
 #finished-message,
@@ -154,7 +154,7 @@ only screen
             width: 45%;
         }
 
-        #score, #game-message, #game-result, #finished-message, #pause a {
+        #score-wrapper, #game-message, #game-result, #finished-message, #pause a {
             text-align: center;
             font-size:2em;
         }
