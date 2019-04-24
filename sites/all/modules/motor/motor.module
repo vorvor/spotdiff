@@ -445,6 +445,10 @@ function motor_game_get_title($nid) {
 function motor_set_score($gid, $score) {
   global $user;
 
+  if ($score < 0) {
+    $score = 0;
+  }
+
   db_merge('motor_spot_diff')
     ->key(array('uid' => $user->uid, 'nid' => $gid))
     ->fields(array(
@@ -473,7 +477,7 @@ function motor_get_user_score($uid) {
     return $sumscore[0]->sum_score;
   }
 
-  return NULL;
+  return 0;
 
 }
 
@@ -492,8 +496,6 @@ function motor_dasboard() {
   $fields = array('username', 'actual game', 'finished', 'reset');
   foreach ($results as $result) {
     $gid = motor_find_actual_game($result->uid);
-    dpm($result->name . ':' . $gid);
-    dpm($result->name . ':' . $gid);
     $row = [];
     $row[] = $result->name;
     $row[] = motor_game_get_title($gid);
@@ -515,8 +517,6 @@ function motor_dasboard() {
 
 function motor_result_list($endgame = FALSE) {
   global $user;
-
-  dpm(motor_get_user_score(8));
 
   $query = db_query('SELECT o.uid, o.id, o.score, o.time FROM motor_spot_diff o INNER JOIN (SELECT id, max(score) mscore FROM motor_spot_diff GROUP BY uid) m ON m.id = o.id ORDER BY mscore DESC');
 
@@ -681,6 +681,17 @@ function motor_ajax_callable_gethint() {
     unset($hints[$spot]);
   }
 
-  drupal_json_output(reset($hints));
+  $score = motor_get_score($nid);
+  $score -= 10;
+  motor_set_score($nid, $score);
+
+  $sumscore = motor_get_user_score($user->uid);
+
+  //return 'hey!';
+
+  drupal_json_output(array(
+    'hint' => reset($hints),
+    'score' => $sumscore,
+  ));
 
 }
