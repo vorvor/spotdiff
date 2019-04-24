@@ -57,8 +57,19 @@ div.field-name-field-image-b {
     text-align: center;
 }
 
+#game-hint-alert-pop-yes,
+#game-hint-alert-pop-no,
+#game-hint {
+    cursor: pointer;
+}
+
 #game-hint-alert-pop-yes {
     color:#000;
+}
+
+#game-hint-alert-pop-yes:hover {
+  color: #c72025;
+  background: #000;
 }
 
 

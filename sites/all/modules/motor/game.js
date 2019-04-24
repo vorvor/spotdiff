@@ -44,6 +44,7 @@ Drupal.behaviors.game = {
                 $('#game-hint').unbind('click');
               }
             } else {
+              console.log(result);
               $('#score').html(result[1]);
               $('#score-wrapper').effect("shake", {times:2, direction: "right"}, 40);
               //$this.effect("shake", {times:2, direction: "up"}, 40);
@@ -51,7 +52,7 @@ Drupal.behaviors.game = {
           }});
       })
 
-      $(window).unbind('click').bind('beforeunload', function(e){
+      $(window).bind('beforeunload', function(e){
         gid = $("#game").data("gid");
         $.ajax({
           url: "/ajax/savetime/" + gid + "/"  + clock.getTime(), 

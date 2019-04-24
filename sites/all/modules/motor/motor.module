@@ -445,10 +445,6 @@ function motor_game_get_title($nid) {
 function motor_set_score($gid, $score) {
   global $user;
 
-  if ($score < 0) {
-    $score = 0;
-  }
-
   db_merge('motor_spot_diff')
     ->key(array('uid' => $user->uid, 'nid' => $gid))
     ->fields(array(
